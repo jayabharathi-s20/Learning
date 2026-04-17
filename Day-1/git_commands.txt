@@ -1,0 +1,31 @@
+git init                # initialize repo
+git clone <url>         # clone repo
+git config --global user.name "Your Name"
+git config --global user.email "your@email.com"
+
+git status              # check changes
+git add .               # stage all files
+
+Commit
+git commit -m "message"            # commit changes
+git commit --amend -m "new msg"    # edit last commit
+
+Branching
+git branch              # list branches
+git branch dev          # create branch
+git checkout dev        # switch branch
+git checkout -b dev     # create + switch
+git branch -d dev       # delete branch
+
+Push / Pull
+git push                # push changes
+git push origin main    # push main
+git push -u origin dev  # push new branch
+
+git pull                # pull latest changes
+git fetch               # fetch without merging
+
+History
+git log                 # full history
+git log --oneline       # short history
+git diff                # see changes
