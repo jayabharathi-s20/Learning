@@ -84,7 +84,11 @@ def add_item(item: Item):
 # ---------------- LOW STOCK API ---------------------------------------
 @app.get("/reports/low-stock")
 def low_stock():
-    items = read_inventory("inventory.csv")
-
-    report = LowStockReport()
-    return report.generate(items)
+    try:
+        items = read_inventory("inventory.csv")
+        report = LowStockReport()
+        return report.generate(items)
+    except Exception as e:
+        logging.error(f"Error fetching item: {e}")
+        return {"error": "Failed to fetch low stock item"}
+    
