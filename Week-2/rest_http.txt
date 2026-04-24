@@ -1,19 +1,50 @@
 REST stands for Representational State Transfer.
 
 REST is a way to design APIs so that different systems can communicate over the internet using standard HTTP rules.
-REST uses HTTP methods
-HTTP methods used in REST
+REST (Representational State Transfer) is an architectural style for designing APIs over HTTP.
 
-------Features of REST APIs-------
-Stateless: Each request contains all required information; the server does not store client session state.
-Client–Server: Client and server are independent, improving scalability and separation of concerns.
-Cacheable: Responses can be marked cacheable to enhance performance.
-Layered System: Can operate across multiple layers to support scalability and security.
+------------------ Core REST Principles:  ----------------------------
+1.Stateless
+    Each request is independent (server doesn’t remember previous requests)
+2.Client-Server Separation
+    Frontend and backend are independent
+3.Resource-Based
+    Everything is treated as a resource (like users, products)
+4.Use HTTP Methods Properly
+    GET, POST, PUT, DELETE map to actions
+5.Uniform Interface
+    Consistent URL structure and behavior
 
-GET → read data
-POST → create data
-PUT/PATCH → update data
-DELETE → remove data
+--------------  HTTP--HyperText Transfer Protocol  ------------------
+
+-HTTP is the communication protocol used by the web.
+-It defines how clients (like browsers or apps) talk to servers.
+
+Key parts of HTTP:
+    -Request → Sent by client
+    -Response → Sent by server
+
+Common HTTP Methods:
+    -GET → Retrieve data
+    -POST → Create new data
+    -PUT → Update existing data (replace)
+    -PATCH → Update partially
+    -DELETE → Remove data   
+
+Status Codes:
+    -200 OK → Request succeeded
+    -201 Created → Resource successfully created (usually after POST)
+    -400 Bad Request → Client sent invalid or malformed request
+    -401 Unauthorized → Authentication required or failed
+    (e.g., missing/invalid login token)
+    -403 Forbidden → Server understands request but refuses to authorize it
+    (you are logged in, but don’t have permission)
+    -404 Not Found → Resource doesn’t exist
+    -500 Internal Server Error → Something broke on the server
+
+
+
+
 
 
 

@@ -6,17 +6,17 @@ from fastapi import FastAPI
 
 from validator import Item
 
-# ---------------- LOGGING ----------------
+# ---------------- LOGGING ----------------------------------
 logging.basicConfig(
     filename="errors.log",
     level=logging.ERROR,
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
-# ---------------- FASTAPI APP ----------------
+# ---------------- FASTAPI APP -------------------------------
 app = FastAPI()
 
-# ---------------- READ CSV ----------------
+# ---------------- READ CSV -----------------------------------
 def read_inventory(file_path):
     items = []
 
@@ -52,12 +52,12 @@ class LowStockReport():
             if item.quantity <= item.threshold
         ]
 
-# ---------------- GET ALL ITEMS ----------------
+# ---------------- GET ALL ITEMS ------------------------------------
 @app.get("/get-items")
 def get_items():
     return read_inventory("inventory.csv")
 
-# ---------------- ADD ITEM TO CSV ----------------
+# ---------------- ADD ITEM TO CSV ----------------------------------
 @app.post("/post-items")
 def add_item(item: Item):
     try:
@@ -81,7 +81,7 @@ def add_item(item: Item):
         logging.error(f"Error adding item: {e}")
         return {"error": "Failed to add item"}
 
-# ---------------- LOW STOCK API ----------------
+# ---------------- LOW STOCK API ---------------------------------------
 @app.get("/reports/low-stock")
 def low_stock():
     items = read_inventory("inventory.csv")
