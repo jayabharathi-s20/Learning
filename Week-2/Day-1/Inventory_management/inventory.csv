@@ -1,0 +1,11 @@
+item_id,name,quantity,threshold,price,category,supplier,expiry_date
+1,Paracetamol,200,50,2.5,medicine,PharmaCorp,2026-12-01
+2,Ibuprofen,120,40,3.0,medicine,HealthPlus,2026-10-15
+3,Cough Syrup,30,20,5.0,medicine,MediCare,2025-12-31
+l,Vitamin C,300,100,1.5,medicine,NutraLife,2026-08-20
+5,Insulin,8,10,10.0,medicine,BioPharm,2026-06-01
+l,2.5,llk,abd,ad,kjk,23,2.37,Paracetamol3,200,50,2.5,medicine,PharmaCorp,2026-12-01
+7,Paracetamol3,200,50,2.5,medicine,PharmaCorp,2026-12-01
+8,Paracetamol30,200,50,2.5,medicine,PharmaCorp,2026-12-01
+9,Insulin123,22,50,150.0,medicine,NutraLife,2026-04-24
+10,Para,15,7,10.0,medicine,para,2026-04-24
