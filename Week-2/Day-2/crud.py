@@ -19,7 +19,7 @@ def get_user(db: Session, user_id: int):
     return db.query(User).filter(User.id == user_id).first()
 
 def update_full_user(db: Session, user_id: int, name: str, age: int):
-    """update all the users --method(put)"""
+    """Update all the users --method(put)"""
     user = get_user(db, user_id)
     if user:
         user.name = name
@@ -29,7 +29,7 @@ def update_full_user(db: Session, user_id: int, name: str, age: int):
     return user
 
 def update_partial_user(db: Session, user_id: int, name: str, age: int):
-    """update specific field of the users --method(patch)"""
+    """Update specific field of the users --method(patch)"""
     user = get_user(db, user_id)
     if user:
         if name is not None:
@@ -42,7 +42,7 @@ def update_partial_user(db: Session, user_id: int, name: str, age: int):
 
 
 def delete_user(db: Session, user_id: int):
-    """delete particular user with ref to id"""
+    """Delete particular user with ref to id"""
     user = get_user(db, user_id)
     if user:
         db.delete(user)
