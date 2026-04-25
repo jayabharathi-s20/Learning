@@ -1,0 +1,23 @@
+from sqlalchemy import Column, Integer, String
+    Column → used to define a column in the table
+    Integer → data type (numbers)
+    String → data type (text)
+
+from database import Base
+    Base comes from your database.py
+    All tables must inherit from this
+
+class User(Base):
+    Creating a table named User
+    It inherits from Base
+
+__tablename__ = "users"
+    Actual database table name will be users
+
+primary_key=True → unique identifier (no duplicates)
+index=True → faster search
+nullable=False → cannot be empty (must provide value)
+
+What is __repr__?
+    __repr__ is a special method in Python
+    It defines how an object is displayed (printed)

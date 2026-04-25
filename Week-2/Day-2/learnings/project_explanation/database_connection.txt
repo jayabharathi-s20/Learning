@@ -1,0 +1,57 @@
+database.py-->
+
+from sqlalchemy import create_engine
+    create_engine is a function in SQLAlchemy
+    It is used to create a connection to the database 
+
+from sqlalchemy.orm import sessionmaker, declarative_base
+    sessionmaker → used to interact with the database (run queries like insert, update, delete)
+    declarative_base → used as a base class to define database tables (models)
+
+DATABASE_URL = "postgresql://postgres:password@localhost:5432/mydb"
+    This is the database connection string
+        postgresql:// → database type (PostgreSQL)
+        postgres → username
+        password → password
+        localhost → where DB is running
+        5432 → port number
+        mydb → database name
+
+engine = create_engine(DATABASE_URL)
+    Creates the actual connection to the database
+
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine
+)
+    This creates a session factory (used to create DB sessions)
+
+    autocommit=False
+        → You must manually call commit()
+        → Gives you control over saving data
+    autoflush=False
+        → Changes are not sent to DB automatically
+        → You control when data is written
+    bind=engine
+        → Connects the session to the database engine
+
+Base = declarative_base()
+    This is the base class for all models (tables)
+
+    class User(Base):
+        This defines a table called User
+        Without Base, you cannot create tables
+
+
+main.py--->
+
+    from database import engine
+    from models import Base
+        engine → which database to connect
+        Base → what tables to create
+
+    Base.metadata.create_all(bind=engine)
+        Base → gives table definitions
+        engine → tells which DB
+        create_all → creates tables

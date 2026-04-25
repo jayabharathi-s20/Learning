@@ -1,0 +1,22 @@
+1.python(type in terminal)
+2.import crud
+3.from database import session_creation
+4.db = session_creation()
+
+----TO GET ALL DATAS----
+5.crud.get_all_users(db)
+
+----TO POST DATAS------
+crud.create_user(db, "John", 25)
+
+-----TO GET SINGLE DATA----
+crud.get_user(db, 1)
+
+-----TO UPDATE DATA------
+crud.update_user(db, 4, "Ravi", 30)
+
+----TO DELETE DATA-------
+ crud.delete_user(db, 4)
+
+ ----CLOSE SESSION---
+ db.close()

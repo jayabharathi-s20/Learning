@@ -1,0 +1,96 @@
+from sqlalchemy.orm import Session
+    This imports Session from SQLAlchemy
+
+    What is Session?
+        It is used to communicate with the database
+        You use it to:
+            insert data
+            read data
+            update data
+            delete data
+        Session = tool to talk to DB
+
+from models import User
+    This imports your User model (table)
+
+----------------------CREATING USER---------------------------------------
+
+def create_user(db: Session, name: str, email: str):
+    create_user → function name (you can choose any name)
+    db: Session → database connection (Session object)
+    name, email → input values from user
+
+user = User(name=name, age=age)
+    Creates a User object in Python
+    This represents a row in the table
+
+db.add(user)
+    Adds the user to the session (queue)
+    Tells SQLAlchemy:“I want to insert this into DB”,Still not saved
+
+db.commit()
+    Saves the data permanently in DB
+    Without this:Data will NOT be stored
+
+db.refresh(user)
+    Reloads data from DB
+
+----------------------GETTING USER---------------------------------------
+def get_users(db: Session):
+    db → database session (connection)
+
+db.query(User)
+    “Select data from User table”
+    Equivalent SQL:SELECT * FROM users;
+
+.all()
+    Fetches all rows
+
+----------------------GETTING SINGLE USER---------------------------------------
+def get_user(db: Session, user_id: int):
+    user_id → input ID
+    Purpose → get one specific user
+
+db.query(User)
+    Select from users table
+
+.filter(User.id == user_id)
+    “Where id = given user_id” 
+    Equivalent SQL:SELECT * FROM users WHERE id = 1;
+
+.first()
+    First matching record
+    OR None if not found
+
+----------------------UPDATING USER---------------------------------------
+def update_user(db: Session, user_id: int, name: str, age: int):
+    db → database session (connection)
+    user_id → which user to update
+    name, age → new values
+
+user = get_user(db, user_id)
+    Calls your earlier function:
+        Fetches user from DB
+    If ID exists → returns user
+    If not → returns None
+
+if user:
+    user.name = name
+    user.age = age
+        Update only if user is found
+        Changes values in memory
+
+db.commit()
+    Saves updated values to database
+
+----------------------UPDATING USER---------------------------------------
+def delete_user(db: Session, user_id: int):
+    db → database session (connection)
+    user_id → ID of the user you want to delete
+
+user = get_user(db, user_id)
+    Fetches the user from database
+    Uses your existing get_user() function
+
+db.delete(user)
+    Marks the user for deletion adn commit
