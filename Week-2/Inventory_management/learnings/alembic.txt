@@ -1,0 +1,99 @@
+ALEMBIC INSTALLATION & SETUP GUIDE
+
+1. Activate Virtual Environment
+--------------------------------
+Linux/Mac:
+source env/bin/activate
+
+2. Install Alembic
+-------------------
+pip install alembic
+
+
+3. Verify Installation
+-----------------------
+alembic --version
+
+
+4. Initialize Alembic
+----------------------
+alembic init alembic
+
+This creates:
+- alembic/ folder
+- alembic.ini file
+
+
+5. Create .env File (IMPORTANT)
+--------------------------------
+Create a file named ".env" in your project root:
+
+Example:
+
+db_user=postgres
+db_pw=yourpassword
+db_host=localhost
+db_port=5432
+db_name=inventory_db
+
+
+6. Install dotenv
+-------------------
+pip install python-dotenv
+
+
+7. Configure Alembic to Use .env
+--------------------------------
+Open: alembic/env.py
+
+Add at the top:
+
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+db_user = os.getenv("db_user")
+db_pw = os.getenv("db_pw")
+db_host = os.getenv("db_host")
+db_port = os.getenv("db_port")
+db_name = os.getenv("db_name")
+
+DATABASE_URL = f"postgresql://{db_user}:{db_pw}@{db_host}:{db_port}/{db_name}"
+
+
+Find this line:
+config.set_main_option("sqlalchemy.url", "something")
+
+Replace with:
+config.set_main_option("sqlalchemy.url", DATABASE_URL)
+
+
+8. Connect Models to Alembic
+-----------------------------
+Open alembic/env.py
+
+Find:
+target_metadata = None
+
+Replace with:
+from models import Base
+target_metadata = Base.metadata
+
+
+9. Create First Migration
+--------------------------
+alembic revision --autogenerate -m "initial"
+
+
+10. Apply Migration
+-------------------
+alembic upgrade head
+
+
+11. After Model Changes (Workflow)
+----------------------------------
+Whenever you update models:
+
+alembic revision --autogenerate -m "your message"
+alembic upgrade head
