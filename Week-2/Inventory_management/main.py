@@ -1,8 +1,9 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from database import SessionLocal
-import crud
-from schemas import *
+from .database import SessionLocal
+from . import crud
+from .schemas import *
+
 
 app = FastAPI()
 
@@ -26,7 +27,7 @@ def create_user_api(user: UserCreate, db: Session = Depends(get_db)):
         User: Created user object
     """
     try:
-        return crud.create_user(db, user.dict())
+        return crud.create_user(db, user.model_dump())
     except ValueError as e:
         raise HTTPException(400, str(e))
     except Exception as e:
@@ -82,7 +83,7 @@ def update_user_api(user_id: int, user: UserUpdate, db: Session = Depends(get_db
         User: Updated user
     """
     try:
-        updated = crud.update_user(db, user_id, user.dict())
+        updated = crud.update_user(db, user_id, user.model_dump())
         if not updated:
             raise HTTPException(404, "User not found")
         return updated
@@ -144,7 +145,7 @@ def create_category_api(category: CategoryCreate, db: Session = Depends(get_db))
         Category: Created category
     """
     try:
-        return crud.create_category(db, category.dict())
+        return crud.create_category(db, category.model_dump())
     except ValueError as e:
         raise HTTPException(400, str(e))
     except Exception as e:
@@ -187,7 +188,7 @@ def update_category_api(category_id: int, category: CategoryUpdate, db: Session 
     Fully update a category.
     """
     try:
-        updated = crud.update_category(db, category_id, category.dict())
+        updated = crud.update_category(db, category_id, category.model_dump())
         if not updated:
             raise HTTPException(404, "Category not found")
         return updated
@@ -233,7 +234,7 @@ def create_item(item: ItemCreate, db: Session = Depends(get_db)):
     Create a new inventory item.
     """
     try:
-        return crud.create_item(db, item.dict())
+        return crud.create_item(db, item.model_dump())
     except ValueError as e:
         raise HTTPException(400, str(e))
     except Exception as e:
@@ -307,7 +308,7 @@ def update_item(item_id: int, item: ItemUpdate, db: Session = Depends(get_db)):
     Fully update an item.
     """
     try:
-        updated = crud.update_item(db, item_id, item.dict())
+        updated = crud.update_item(db, item_id, item.model_dump())
         if not updated:
             raise HTTPException(404, "Item not found")
         return updated

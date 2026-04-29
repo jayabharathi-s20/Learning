@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, validator
+from pydantic import BaseModel, EmailStr, field_validator
 from typing import Optional
 from datetime import date
 
@@ -28,7 +28,7 @@ class UserBase(BaseModel):
     name: str
     email: EmailStr
 
-    @validator("name")
+    @field_validator("name")
     def validate_name(cls, value):
         return validate_name_common(value, "Name")
 
@@ -56,7 +56,7 @@ class UserPatch(BaseModel):
     name: Optional[str] = None
     email: Optional[EmailStr] = None
 
-    @validator("name")
+    @field_validator("name")
     def validate_name(cls, value):
         return validate_name_common(value, "Name")
 
@@ -72,7 +72,7 @@ class CategoryBase(BaseModel):
     name: str
     
 
-    @validator("name")
+    @field_validator("name")
     def validate_name(cls, value):
         return validate_name_common(value, "Name")
 
@@ -97,7 +97,7 @@ class CategoryPatch(BaseModel):
     """
     name: Optional[str] = None
 
-    @validator("name")
+    @field_validator("name")
     def validate_name(cls, value):
         return validate_name_common(value, "Name")
 
@@ -126,11 +126,11 @@ class ItemBase(BaseModel):
     category_id: int
     created_by: int
 
-    @validator("name")
+    @field_validator("name")
     def validate_name(cls, value):
         return validate_name_common(value, "Name")
 
-    @validator("quantity", "threshold")
+    @field_validator("quantity", "threshold")
     def validate_numbers(cls, value):
         """
         Validate numeric fields (quantity, threshold).
@@ -139,7 +139,7 @@ class ItemBase(BaseModel):
             raise ValueError("Value cannot be negative")
         return value
 
-    @validator("price")
+    @field_validator("price")
     def validate_price(cls, value):
         """
         Validate price field.
@@ -148,7 +148,7 @@ class ItemBase(BaseModel):
             raise ValueError("Price must be greater than 0")
         return value
 
-    @validator("expiry_date")
+    @field_validator("expiry_date")
     def validate_expiry(cls, value):
         """
         Validate expiry date.
@@ -190,11 +190,11 @@ class ItemPatch(BaseModel):
     category_id: Optional[int] = None
     created_by: Optional[int] = None
 
-    @validator("name")
+    @field_validator("name")
     def validate_name(cls, value):
         return validate_name_common(value, "Name")
 
-    @validator("quantity", "threshold")
+    @field_validator("quantity", "threshold")
     def validate_numbers(cls, value):
         """
         Validate numeric fields if provided.
@@ -203,7 +203,7 @@ class ItemPatch(BaseModel):
             raise ValueError("Value cannot be negative")
         return value
 
-    @validator("price")
+    @field_validator("price")
     def validate_price(cls, value):
         """
         Validate price if provided.
@@ -212,7 +212,7 @@ class ItemPatch(BaseModel):
             raise ValueError("Price must be greater than 0")
         return value
 
-    @validator("expiry_date")
+    @field_validator("expiry_date")
     def validate_expiry(cls, value):
         """
         Validate expiry date if provided.

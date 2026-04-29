@@ -1,0 +1,27 @@
+Testing pyramid concepts : 
+    1. Unit Tests
+        Unit testing is the base of the software test pyramid. 
+        It focuses on individual components or smaller units of code within the software.
+        It verifies that each part works correctly in isolation, without any dependencies on other system parts.
+    
+    2. Integration Tests
+        Integration testing is performed after unit testing. 
+        Here, the interaction between different modules or services in the software is examined. 
+        It ensures that they work together as intended before they’re integrated with larger external software units to operate as a single entity.
+
+    3. End-to-end (E2E) Tests
+        E2E testing evaluates the software workflow by simulating user interactions with APIs, 
+          databases, and the interface, including form completion, button clicks, and navigation.
+
+Test-Driven Development (TDD) :
+    Test-driven development is an iterative approach to development that involves writing automated tests prior to writing the code.
+
+TDD Testing Tools :
+    1. Pytest
+        Pytest is a highly flexible Python framework that makes writing small, readable tests easy and can scale to support complex functional testing for apps and libraries. 
+        It promotes TDD principles through the auto-discovery of test modules and functions.
+
+Pytest Installation :
+    pip install pytest
+    pytest --version
+    pip install httpx

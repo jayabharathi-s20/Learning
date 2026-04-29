@@ -1,9 +1,8 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from datetime import date, timedelta
-from models import User, Category, Item
+from .models import User, Category, Item
 from sqlalchemy.exc import IntegrityError
-
 
 def create_user(db: Session, data: dict):
     """
