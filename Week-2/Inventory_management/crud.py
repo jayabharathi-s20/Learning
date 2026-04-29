@@ -3,6 +3,8 @@ from sqlalchemy import func
 from datetime import date, timedelta
 from .models import User, Category, Item
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import func
+
 
 def create_user(db: Session, data: dict):
     """
@@ -27,7 +29,7 @@ def create_user(db: Session, data: dict):
     except IntegrityError:
         db.rollback()
         raise ValueError("Email already exists")
-
+    
 
 def get_users(db: Session):
     """
@@ -159,33 +161,34 @@ def delete_user(db: Session, user_id: int):
     return {"message": "User deleted"}
 
 
-
 def create_category(db: Session, data: dict):
-    """
-    Create a new category.
+    try:
+        name = data["name"].strip() 
 
-    Args:
-        db (Session): Database session
-        data (dict): Category data
+        existing = db.query(Category).filter(
+            func.lower(Category.name) == name.lower()
+        ).first()
 
-    Returns:
-        Category: Created category
+        if existing:
+            raise ValueError("Category already exists")
 
-    Raises:
-        ValueError: If category already exists
-    """
-    existing = db.query(Category).filter(
-        Category.name == data["name"]
-    ).first()
+        category = Category(name=name)  
+        db.add(category)
+        db.commit()
+        db.refresh(category)
+        return category
 
-    if existing:
+    except IntegrityError:
+        db.rollback()
         raise ValueError("Category already exists")
 
-    category = Category(**data)
-    db.add(category)
-    db.commit()
-    db.refresh(category)
-    return category
+def get_items_by_supplier(db: Session, supplier: str):
+    """
+    Filter items by supplier (case insensitive)
+    """
+    return db.query(Item).filter(
+        Item.supplier.ilike(f"%{supplier}%")
+    ).all()
 
 def get_categories(db: Session):
     """
@@ -216,16 +219,17 @@ def update_category(db: Session, category_id: int, data: dict):
         return None
 
     if "name" in data:
+        name = data["name"].strip()
+
         existing = db.query(Category).filter(
-            Category.name == data["name"],
+            func.lower(Category.name) == name.lower(),
             Category.id != category_id
         ).first()
 
         if existing:
             raise ValueError("Category already exists")
 
-    for key, value in data.items():
-        setattr(category, key, value)
+        category.name = name  
 
     db.commit()
     db.refresh(category)
@@ -237,18 +241,18 @@ def patch_category(db: Session, category_id: int, data: dict):
     if not category:
         return None
 
-    if "name" in data:
+    if "name" in data and data["name"] is not None:
+        name = data["name"].strip()
+
         existing = db.query(Category).filter(
-            Category.name == data["name"],
+            func.lower(Category.name) == name.lower(),
             Category.id != category_id
         ).first()
 
         if existing:
             raise ValueError("Category already exists")
 
-    for key, value in data.items():
-        if value is not None:
-            setattr(category, key, value)
+        category.name = name  
 
     db.commit()
     db.refresh(category)
@@ -283,6 +287,7 @@ def create_item(db: Session, data: dict):
     try:
         if not db.query(Category).filter(Category.id == data["category_id"]).first():
             raise ValueError("Invalid category_id")
+        
 
         if not db.query(User).filter(User.id == data["created_by"]).first():
             raise ValueError("Invalid created_by (user not found)")

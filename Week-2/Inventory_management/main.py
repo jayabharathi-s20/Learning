@@ -32,6 +32,8 @@ def create_user_api(user: UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(400, str(e))
     except Exception as e:
         raise HTTPException(500, str(e))
+    
+
 
 
 @app.get("/users")

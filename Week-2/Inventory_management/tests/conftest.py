@@ -25,33 +25,63 @@ TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engin
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_db():
-    Base.metadata.create_all(bind=engine)
-    yield
-    Base.metadata.drop_all(bind=engine)
+    """
+    Set up the test database schema once per test session.
+
+    - Creates all tables before any tests run
+    - Drops all tables after all tests finish
+
+    This ensures a clean database environment for the entire test run.
+    """
+    try:
+        Base.metadata.create_all(bind=engine)
+        yield
+    finally:
+        Base.metadata.drop_all(bind=engine)
 
 
 @pytest.fixture(scope="function")
 def db():
+    """
+    Provide a FastAPI test client with a test database.
+
+    - Overrides the application's `get_db` dependency
+    - Injects the test database session instead of real DB
+    - Ensures API tests run against isolated test data
+
+    Cleanup:
+    - Removes dependency overrides after test
+    """
     connection = engine.connect()
     transaction = connection.begin()
 
     session = TestingSessionLocal(bind=connection)
+    try:
+        yield session
 
-    yield session
-
-    session.close()
-    transaction.rollback()   
-    connection.close()
+    finally:
+        session.close()
+        transaction.rollback()   
+        connection.close()
 
 
 @pytest.fixture(scope="function")
 def client(db):
+    """
+    Provides a FastAPI test client using a test database.
+
+    - Overrides get_db dependency to use test DB
+    - Yields a TestClient for API testing
+    - Clears overrides after test
+    """
     def override_get_db():
         yield db
 
     app.dependency_overrides[get_db] = override_get_db
 
-    client = TestClient(app)
-    yield client
+    test_client = TestClient(app)
 
-    app.dependency_overrides.clear()
+    try:
+        yield test_client
+    finally:
+        app.dependency_overrides.clear()
