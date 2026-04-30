@@ -37,14 +37,7 @@ def read_users(db: Session = Depends(get_db)):
         return crud.get_all_users(db)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
-@app.get("/health")
-def get_health():
-    return True
 
-@app.post("/post-health")
-def get_health():
-    return True
 
 
 @app.get("/users/{user_id}")
