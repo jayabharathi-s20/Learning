@@ -2,7 +2,7 @@ import pytest
 from datetime import date, timedelta
 from pydantic import ValidationError
 
-from app.schemas import (
+from app.models import (
     UserCreate,
     CategoryCreate, 
     ItemCreate, ItemPatch

@@ -3,7 +3,7 @@ from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
-from models import Base
+from app.models import Base
 
 
 from alembic import context
@@ -17,9 +17,10 @@ db_user = os.getenv("db_user")
 db_pw = os.getenv("db_pw")
 db_host = os.getenv("db_host")
 db_port = os.getenv("db_port")
-db_name = os.getenv("db_inventory_name")
+db_name = os.getenv("db_name")
 
 DATABASE_URL = f"postgresql://{db_user}:{db_pw}@{db_host}:{db_port}/{db_name}"
+print("USING DB:", DATABASE_URL)
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
