@@ -135,7 +135,7 @@ def update_user(db: Session, user_id: int, data: dict):
         ValueError: If email already exists
     """
     user = get_user(db, user_id)
-    
+
     if not user:
         return None
 
@@ -410,6 +410,7 @@ def update_item(db: Session, item_id: int, data: dict):
         return item
 
     except IntegrityError:
+        
         db.rollback()
         raise ValueError("Error updating item")
 

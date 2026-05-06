@@ -4,6 +4,9 @@ from app import crud
 from app.models import UserCreate, LoginSchema, UserUpdate, UserPatch, CategoryCreate, CategoryUpdate, CategoryPatch, ItemCreate, ItemUpdate, ItemPatch
 from app.dependencies import  admin_only,all_roles,admin_manager,get_db
 from .utils.auth import create_access_token, decode_token
+import logging
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
