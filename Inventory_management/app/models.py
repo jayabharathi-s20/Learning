@@ -12,6 +12,7 @@ class User(Base):
     name = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=False, index=True)
     password = Column(String, nullable=False)
+    role = Column(String,nullable=True) 
     items = relationship( "Item", back_populates="owner")
 
 class Category(Base):
@@ -74,6 +75,7 @@ class UserCreate(UserBase):
     Schema for creating a user.
     """
     password: str
+    role: Optional[str] = None
 
     @field_validator("password")
     def validate_password(cls, value):
