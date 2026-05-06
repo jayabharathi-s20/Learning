@@ -75,7 +75,7 @@ class UserCreate(UserBase):
     Schema for creating a user.
     """
     password: str
-    role: Optional[str] = None
+    role: Optional[str] =None
 
     @field_validator("password")
     def validate_password(cls, value):

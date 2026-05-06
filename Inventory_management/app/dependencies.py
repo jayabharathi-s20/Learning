@@ -21,7 +21,7 @@ def get_current_user(
     token = request.cookies.get("access_token")
 
     if not token:
-        raise HTTPException(status_code=401, detail="Not authenticated")
+        raise HTTPException(status_code=401, detail="Token not found")
 
     payload = decode_token(token)
 
@@ -40,12 +40,28 @@ def get_current_user(
 
     return user
 
-def require_roles(*roles):
-    def role_checker(user = Depends(get_current_user)):
+class Roles:
+    ADMIN = "admin"
+    MANAGER = "manager"
+    STAFF = "staff"
+
+
+
+class RequiredRoles:
+    def __init__(self,*roles):
+        self.roles=roles
+        
+    def __call__(self,user = Depends(get_current_user)):
         if not user.role:
-            raise HTTPException(403, "Role not assigned")
-        if user.role not in roles:
-            raise HTTPException(403, "Access denied")
+            raise HTTPException(status_code=403, detail="Role not assigned")
+        
+        if user.role not in self.roles:
+            raise HTTPException(status_code=403, detail="Access denied")
 
         return user
-    return role_checker
+    
+admin_only = RequiredRoles(Roles.ADMIN)
+
+admin_manager = RequiredRoles(Roles.ADMIN, Roles.MANAGER)
+
+all_roles = RequiredRoles(Roles.ADMIN, Roles.MANAGER, Roles.STAFF)

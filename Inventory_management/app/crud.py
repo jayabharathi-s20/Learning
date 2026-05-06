@@ -5,6 +5,8 @@ from app.models import User, Category, Item
 from sqlalchemy.exc import IntegrityError
 from app.utils.auth import create_access_token,create_refresh_token
 from passlib.context import CryptContext
+from fastapi import HTTPException
+
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -27,7 +29,7 @@ def create_user(db: Session, user):
         name=user.name.strip(),
         email=user.email,
         password=hashed_pw,
-        role=user.role if user.role else None
+        role=user.role 
     )
 
     db.add(db_user)
@@ -133,6 +135,7 @@ def update_user(db: Session, user_id: int, data: dict):
         ValueError: If email already exists
     """
     user = get_user(db, user_id)
+    
     if not user:
         return None
 
@@ -201,18 +204,19 @@ def patch_user(db: Session, user_id: int, data: dict):
 
 
 def delete_user(db: Session, user_id: int):
+    
     user = db.query(User).filter(User.id == user_id).first()
 
     if not user:
-        return None
+        raise HTTPException(status_code=404, detail="User not found")
 
     if user.items:
-        raise ValueError("User has items. Cannot delete.")
+        raise HTTPException(status_code=400, detail="User has items. Cannot delete.")
+
 
     db.delete(user)
     db.commit()
-    return {"message": "User deleted"}
-
+    return {"message": "User deleted successfully"}
 
 def create_category(db: Session, data: dict):
     """
