@@ -1,9 +1,10 @@
-from app.database import Base
+from app.connections import Base
 from sqlalchemy import Column, Integer, String, Float, Date, ForeignKey
 from sqlalchemy.orm import relationship
 from pydantic import BaseModel, EmailStr, field_validator
 from typing import Optional
 from datetime import date
+from app.constants import *
 
 class User(Base):
     __tablename__ = "users"
@@ -80,9 +81,9 @@ class UserCreate(UserBase):
     @field_validator("password")
     def validate_password(cls, value):
         if len(value) < 6:
-            raise ValueError("Password must be at least 6 characters")
+            raise ValueError(PASSWORD_MIN_LENGTH)
         if len(value) > 128:
-            raise ValueError("Password too long")
+            raise ValueError(PASSWORD_TOO_LONG)
         return value
 
 class LoginSchema(BaseModel):
@@ -92,7 +93,7 @@ class LoginSchema(BaseModel):
     @field_validator("password")
     def validate_password(cls, value):
         if not value or value.strip() == "":
-            raise ValueError("Password cannot be empty")
+            raise ValueError(PASSWORD_EMPTY)
         return value
     
 class UserResponse(BaseModel):
@@ -112,12 +113,7 @@ class UserUpdate(UserBase):
 
 
 class UserPatch(BaseModel):
-    """
-    Schema for partially updating a user.
-        raise ValueError("Password must be at least 6 characters")
 
-    All fields are optional.
-    """
     name: Optional[str] = None
     email: Optional[EmailStr] = None
 
@@ -201,7 +197,7 @@ class ItemBase(BaseModel):
         Validate numeric fields (quantity, threshold).
         """
         if value < 0:
-            raise ValueError("Value cannot be negative")
+            raise ValueError(NEGATIVE_VALUE)
         return value
 
     @field_validator("price")
@@ -210,7 +206,7 @@ class ItemBase(BaseModel):
         Validate price field.
         """
         if value <= 0:
-            raise ValueError("Price must be greater than 0")
+            raise ValueError(PRICE_INVALID)
         return value
 
     @field_validator("expiry_date")
@@ -222,7 +218,7 @@ class ItemBase(BaseModel):
             - Cannot be in the past
         """
         if value < date.today():
-            raise ValueError("Expiry date cannot be in the past")
+            raise ValueError(EXPIRY_PAST_DATE)
         return value
 
 
@@ -265,7 +261,7 @@ class ItemPatch(BaseModel):
         Validate numeric fields if provided.
         """
         if value is not None and value < 0:
-            raise ValueError("Value cannot be negative")
+            raise ValueError(NEGATIVE_VALUE)
         return value
 
     @field_validator("price")
@@ -274,7 +270,7 @@ class ItemPatch(BaseModel):
         Validate price if provided.
         """
         if value is not None and value <= 0:
-            raise ValueError("Price must be greater than 0")
+            raise ValueError(PRICE_INVALID)
         return value
 
     @field_validator("expiry_date")
@@ -283,5 +279,5 @@ class ItemPatch(BaseModel):
         Validate expiry date if provided.
         """
         if value is not None and value < date.today():
-            raise ValueError("Expiry date cannot be in the past")
+            raise ValueError(EXPIRY_PAST_DATE)
         return value
