@@ -24,5 +24,4 @@
 - Added `CHANGELOG.md` file for tracking project updates.
 
 ### Modified
-- Modified error handling.
-
+- refactored error handling across controllers and routes.
