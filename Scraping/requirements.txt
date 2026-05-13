@@ -1,0 +1,4 @@
+Scrapy==2.15.2
+python-dotenv ==1.2.2
+SQLAlchemy==2.0.49
+psycopg2-binary==2.9.12
