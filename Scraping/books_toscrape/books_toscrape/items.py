@@ -24,6 +24,8 @@ class PaginationItem(scrapy.Item):
     stock = scrapy.Field()
     product_information = scrapy.Field()
     pagination_url=scrapy.Field()
+    created_at=scrapy.Field()
+    updated_at=scrapy.Field()
     
     
 

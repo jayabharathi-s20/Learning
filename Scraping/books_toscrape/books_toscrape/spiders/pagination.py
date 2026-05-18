@@ -2,6 +2,8 @@ import scrapy
 from ..items import PaginationItem
 import re
 import json
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 class PaginationSpider(scrapy.Spider):
     name = "pagination"

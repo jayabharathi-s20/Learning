@@ -4,7 +4,8 @@ import json
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-
+from datetime import datetime
+from zoneinfo import ZoneInfo
 from .models import Base, Book, Pagination
 
 load_dotenv()
@@ -38,10 +39,6 @@ class BasePipeline:
             Session = sessionmaker(bind=self.engine)
             self.session = Session()
 
-            self.session.query(self.model).delete()
-            self.session.commit()
-
-            print("Old data cleared")
             print("DB Connected Successfully")
 
         except Exception as e:
@@ -108,30 +105,73 @@ class PaginationPipeline(BasePipeline):
 
         try:
 
-            print(f"Saving: {item.get('title')}")
+            existing_book=self.session.query(Pagination).filter_by(
+                host_url=item.get("host_url")
+            ).first()
+            if existing_book:
+                data_changed=False
+                fields_to_check=[
+                    "category",
+                    "title",
+                    "price",
+                    "description",
+                    "image_url",
+                    "stock",
+                    "product_information",
+                    "pagination_url"
+                ]
+                for field in fields_to_check:
+                    old_value=getattr(existing_book,field)
+                    new_value=item.get(field)
+                    if old_value!=new_value:
+                        setattr(existing_book,field,new_value)
+                        data_changed=True
 
-            book = Pagination(
-                category=item.get("category"),
-                host_url=item.get("host_url"),
-                title=item.get("title"),
-                price=item.get("price"),
-                description=item.get("description"),
-                image_url=item.get("image_url"),
-                stock=item.get("stock"),
-                product_information=item.get("product_information"),
-            
-                pagination_url=item.get("pagination_url")
-            )
 
-            self.session.add(book)
+                if data_changed:
+
+                    print(f"Updated: {item.get('title')}")
+
+                else:
+                    print(f"No Changes: {item.get('title')}")
+
+            else:
+
+                new_book = Pagination(
+
+                    category=item.get("category"),
+                    host_url=item.get("host_url"),
+
+                    title=item.get("title"),
+                    price=item.get("price"),
+                    description=item.get("description"),
+
+                    image_url=item.get("image_url"),
+                    stock=item.get("stock"),
+
+                    product_information=item.get("product_information"),
+
+                    pagination_url=item.get("pagination_url"),
+
+
+                    
+                )
+
+                self.session.add(new_book)
+
+                print(f"Inserted: {item.get('title')}")
+
             self.session.commit()
-
-            print("Saved Successfully")
 
         except Exception as e:
 
             self.session.rollback()
-            print("INSERT ERROR:", e)
+
+            print("INSERT/UPDATE ERROR:", e)
 
         return item
-    
+            
+
+
+
+            
